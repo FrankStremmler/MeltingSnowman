@@ -68,16 +68,21 @@ def check_won_or_lost(word: str, chosen_letters: list[str])->bool:
             return False
     return True
 
-def get_letter():
+def get_letter(chosen_letters: list[str]):
     '''
     Get's a single Character (Lower Case). Rejects any other Input.
+    Check'S also if the Letter was already chosen and rejects these too
     :return: str -> The Letter in Lower Case
     '''
     letter = ""
-    while not letter.isalpha():
+    while letter == "":
         letter = input("Guess a letter: ")
         if not letter.isalpha() or len(letter) > 1:
             print("please only a single letter (a..z)")
+            letter = ""
+        if letter in chosen_letters:
+            print(f"{letter} was already tried! Chose a different letter!")
+            letter = ""
     return letter.lower()
 
 
@@ -96,10 +101,10 @@ def play_game():
     while tries > 0:
         print_snowman(tries)
         print(dotted_line(secret_word, chosen_letters))
-        guess = get_letter()
+        guess = get_letter(chosen_letters)
         chosen_letters.append(guess)
         # reduce Tries???
-        tries -= 1 if not check_letter(secret_word, guess) else
+        tries -= 1 if not check_letter(secret_word, guess) else 0
         # checking if Gamne won or lost
         if check_won_or_lost(secret_word, chosen_letters):
             print_snowman(tries)
